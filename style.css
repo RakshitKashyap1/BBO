@@ -1,19 +1,33 @@
+/*
+  @file style.css
+  @description Main stylesheet for the application. 
+  Follows a premium dark-mode design system with glassmorphism and smooth transitions.
+*/
+
 :root {
     /* Color Palette - Premium Dark Mode */
+    /* Primary background color for the overall theme */
     --bg-color: #0d0d0e;
+    /* Semi-transparent background for card elements to create depth */
     --card-bg: rgba(255, 255, 255, 0.05);
+    /* Cyan/Electric Blue highlight color for primary focus */
     --accent-primary: #00f2fe;
-    /* Cyan/Electric Blue */
+    /* Soft Blue highlight color for secondary focus */
     --accent-secondary: #4facfe;
+    /* Main readable text color (white) */
     --text-main: #ffffff;
+    /* Muted text color for secondary information (gray) */
     --text-muted: #a0a0a0;
+    /* Subtle border color for glassmorphism effects */
     --glass-border: rgba(255, 255, 255, 0.1);
+    /* Standardized shadow for elevated components */
     --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 
-    /* Typography */
+    /* Typography - Standardizing fonts for headings and body */
     --font-hero: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
 }
+
 
 * {
     margin: 0;
@@ -41,7 +55,7 @@ a {
     padding: 0 2rem;
 }
 
-/* Glassmorphism Utility */
+/* Glassmorphism Utility - Creates the 'glass' effect with blur and semi-transparent borders */
 .glass {
     background: var(--card-bg);
     backdrop-filter: blur(12px);
@@ -49,6 +63,7 @@ a {
     border: 1px solid var(--glass-border);
     border-radius: 20px;
 }
+
 
 /* Header */
 header {

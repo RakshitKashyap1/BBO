@@ -1,17 +1,32 @@
+/**
+ * @file Dashboard.jsx
+ * @description The main landing page for authenticated Advertisers.
+ * It displays key performance metrics and a summary of recent bookings.
+ */
+
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { mockBookings, mockAdSpaces } from '../../data/mockData';
 import { TrendingUp, Calendar, CreditCard, Activity } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+/**
+ * Dashboard Component:
+ * Aggregates information for the advertiser to provide a high-level overview of their campaigns.
+ */
 export default function Dashboard() {
-    const { user } = useAuth();
+    const { user } = useAuth(); // Access current logged-in user details
 
-    // Filter bookings for the current advertiser
+    /**
+     * activeBookings: Filters global mock bookings to only show those belonging
+     * to the currently logged-in advertiser.
+     */
     const activeBookings = mockBookings.filter(b => b.advertiserId === user.id);
 
     return (
         <div className="animate-fade-in">
+            
+            {/* 1. Header Section: Personalized welcome message */}
             <div className="flex justify-between items-center mb-8">
                 <div>
                     <h1 style={{ margin: 0 }}>Welcome back, {user.name}</h1>
@@ -20,7 +35,10 @@ export default function Dashboard() {
                 <Link to="/search" className="btn btn-primary">Book New Space</Link>
             </div>
 
+            {/* 2. Stats Grid: Displays high-level KPIs */}
             <div className="grid md:grid-cols-4 gap-6 mb-8">
+                
+                {/* Metric: Number of Active Campaigns */}
                 <div className="card stat-card">
                     <div className="stat-icon"><Activity size={24} /></div>
                     <div>
@@ -28,6 +46,8 @@ export default function Dashboard() {
                         <div className="stat-value text-gradient">{activeBookings.length}</div>
                     </div>
                 </div>
+
+                {/* Metric: Total Impressions (Static for demo) */}
                 <div className="card stat-card">
                     <div className="stat-icon" style={{ background: 'rgba(16, 185, 129, 0.1)', color: 'var(--success)' }}><TrendingUp size={24} /></div>
                     <div>
@@ -35,6 +55,8 @@ export default function Dashboard() {
                         <div className="stat-value">4.2M</div>
                     </div>
                 </div>
+
+                {/* Metric: Total Days Live (Static for demo) */}
                 <div className="card stat-card">
                     <div className="stat-icon" style={{ background: 'rgba(236, 72, 153, 0.1)', color: 'var(--secondary)' }}><Calendar size={24} /></div>
                     <div>
@@ -42,6 +64,8 @@ export default function Dashboard() {
                         <div className="stat-value">124</div>
                     </div>
                 </div>
+
+                {/* Metric: Total Spend (Static for demo) */}
                 <div className="card stat-card">
                     <div className="stat-icon" style={{ background: 'rgba(245, 158, 11, 0.1)', color: 'var(--warning)' }}><CreditCard size={24} /></div>
                     <div>
@@ -51,6 +75,7 @@ export default function Dashboard() {
                 </div>
             </div>
 
+            {/* 3. Recent Bookings List: Table showing detailed transaction history */}
             <div className="card">
                 <div className="flex justify-between items-center mb-6">
                     <h3 style={{ margin: 0 }}>Recent Bookings</h3>
@@ -71,6 +96,7 @@ export default function Dashboard() {
                         </thead>
                         <tbody>
                             {activeBookings.map(booking => {
+                                // Match the booking to its corresponding ad space for display
                                 const space = mockAdSpaces.find(s => s.id === booking.spaceId);
                                 return (
                                     <tr key={booking.id}>
@@ -95,6 +121,8 @@ export default function Dashboard() {
                                     </tr>
                                 );
                             })}
+                            
+                            {/* Empty state Row */}
                             {activeBookings.length === 0 && (
                                 <tr>
                                     <td colSpan="6" className="text-center py-8 text-muted">No recent bookings found.</td>
@@ -107,3 +135,4 @@ export default function Dashboard() {
         </div>
     );
 }
+

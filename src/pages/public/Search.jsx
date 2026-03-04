@@ -1,11 +1,26 @@
+/**
+ * @file Search.jsx
+ * @description The marketplace page where users can browse and search for available advertisement spaces.
+ * It features a search bar that filters the displayed list of billboards in real-time.
+ */
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { mockAdSpaces } from '../../data/mockData';
 import { Search as SearchIcon, MapPin, Filter } from 'lucide-react';
 
+/**
+ * Search Component:
+ * Displays a searchable grid of advertisement spaces.
+ */
 export default function Search() {
+    // State to hold the user's search query
     const [searchTerm, setSearchTerm] = useState('');
 
+    /**
+     * filteredSpaces: Filters the mock data based on the search term.
+     * It checks both the title and the location for a match.
+     */
     const filteredSpaces = mockAdSpaces.filter(space =>
         space.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         space.location.toLowerCase().includes(searchTerm.toLowerCase())
@@ -13,6 +28,8 @@ export default function Search() {
 
     return (
         <div className="container animate-fade-in" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+            
+            {/* 1. Header & Search Input */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
                     <h1>Explore Ad Spaces</h1>
@@ -20,6 +37,7 @@ export default function Search() {
                 </div>
 
                 <div className="flex gap-2 w-full md:w-auto">
+                    {/* Search Input with Icon */}
                     <div style={{ position: 'relative' }} className="w-full md:w-64">
                         <SearchIcon size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                         <input
@@ -31,16 +49,22 @@ export default function Search() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
+                    {/* Filter Toggle (Placeholder) */}
                     <button className="btn btn-secondary">
                         <Filter size={18} /> Filters
                     </button>
                 </div>
             </div>
 
+            {/* 2. Grid of Results */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredSpaces.map(space => (
                     <Link to={`/ad/${space.id}`} key={space.id} className="card p-0 overflow-hidden" style={{ padding: 0, textDecoration: 'none', display: 'flex', flexDirection: 'column' }}>
+                        
+                        {/* Space Thumbnail */}
                         <img src={space.image} alt={space.title} style={{ width: '100%', height: '200px', objectFit: 'cover', borderBottom: '1px solid var(--border)' }} />
+                        
+                        {/* Space Content Summary */}
                         <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
                             <div className="flex justify-between items-start mb-2">
                                 <h3 style={{ fontSize: '1.125rem', marginBottom: 0 }}>{space.title}</h3>
@@ -50,6 +74,7 @@ export default function Search() {
                                 <MapPin size={14} /> {space.location}
                             </p>
 
+                            {/* Footer Information (Price & Action) */}
                             <div className="mt-auto pt-4 border-t" style={{ borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div>
                                     <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>${space.pricePerDay}</span>
@@ -57,9 +82,12 @@ export default function Search() {
                                 </div>
                                 <span className="btn btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem' }}>View Details</span>
                             </div>
+
                         </div>
                     </Link>
                 ))}
+
+                {/* Empty State: If no spaces match the search criteria */}
                 {filteredSpaces.length === 0 && (
                     <div className="col-span-full py-20 text-center">
                         <p style={{ fontSize: '1.25rem' }}>No ad spaces found matching your search.</p>
@@ -69,3 +97,4 @@ export default function Search() {
         </div>
     );
 }
+

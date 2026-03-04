@@ -1,22 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
 
+/*
+  @file index.css
+  @description The core design system for the React application.
+  It implements a 'Neo-Brutalist' aesthetic, characterized by bold borders,
+  bright colors, hard shadows, and high contrast.
+*/
+
+
 :root {
-  /* Neo-Brutalism + Material Mix */
+  /* Neo-Brutalism + Material Mix Design Tokens */
+  /* Main background of the page - off-white/beige for that brutalist paper feel */
   --bg-main: #fdfaf6;
+  /* Background for container elements like cards or panels */
   --bg-panel: #ffffff;
+  /* Subtle hover state for interactive sections */
   --bg-panel-hover: #f1f5f9;
   
-  --primary: #4338ca; /* Material Indigo */
+  /* Color Palette - Using high-saturation 'pop' colors */
+  --primary: #4338ca; /* Material Indigo - For primary actions */
   --primary-hover: #3730a3;
-  --secondary: #ec4899; /* Vibrant Pink */
-  --accent: #fcd34d; /* Bright Yellow */
-  --text-main: #0f172a;
-  --text-muted: #475569;
-  --border: #000000;
+  --secondary: #ec4899; /* Vibrant Pink - For secondary interest */
+  --accent: #fcd34d; /* Bright Yellow - For highlights and badges */
+  --text-main: #0f172a; /* Deep charcoal for text readability */
+  --text-muted: #475569; /* Gray for less important details */
+  --border: #000000; /* Pure black borders are a staple of Neo-Brutalism */
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
 
+  /* Typography & Spacing */
   --font-family: 'Space Grotesk', system-ui, sans-serif;
   --border-width: 3px;
   --radius-sm: 4px;
@@ -24,14 +37,16 @@
   --radius-lg: 12px;
   --radius-pill: 9999px;
 
-  /* Hard Brutalist Shadows */
+  /* Hard Brutalist Shadows - Defined by thick offsets without any blur */
   --shadow-sm: 3px 3px 0px 0px var(--border);
   --shadow-md: 5px 5px 0px 0px var(--border);
   --shadow-lg: 8px 8px 0px 0px var(--border);
   --shadow-none: 0px 0px 0px 0px var(--border);
 
+  /* Transition timing for hover effects */
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 
 * {
   margin: 0;

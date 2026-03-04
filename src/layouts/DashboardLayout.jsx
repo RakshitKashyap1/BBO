@@ -1,3 +1,9 @@
+/**
+ * @file DashboardLayout.jsx
+ * @description The layout used for authenticated users (Advertisers, Owners, Admins).
+ * It features a persistent Sidebar with role-specific navigation and a main content area.
+ */
+
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -6,6 +12,10 @@ import {
     User, Image as ImageIcon, PlusCircle, DollarSign, Users, ShieldAlert, LogOut
 } from 'lucide-react';
 
+/**
+ * navConfig: Configuration object that defines which navigation links 
+ * should be shown to which user role.
+ */
 const navConfig = {
     advertiser: [
         { label: 'Dashboard', path: '/advertiser/dashboard', icon: LayoutDashboard },
@@ -33,15 +43,24 @@ const navConfig = {
     ]
 };
 
+/**
+ * DashboardLayout Component:
+ * Manages the authenticated UI shell, including logic for the dynamic sidebar.
+ */
 export default function DashboardLayout() {
     const { user, logout } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
 
-    if (!user) return null; // Handled by ProtectedRoute
+    // If no user is logged in, we return null (though ProtectedRoute should prevent this)
+    if (!user) return null;
 
+    // Filter the sidebar links based on the user's role
     const links = navConfig[user.role] || [];
 
+    /**
+     * handleLogout: Handles session termination and navigation to the home page.
+     */
     const handleLogout = () => {
         logout();
         navigate('/');
@@ -49,11 +68,14 @@ export default function DashboardLayout() {
 
     return (
         <div className="dashboard-layout">
-            {/* Sidebar Navigation */}
+            
+            {/* 1. Sidebar Panel */}
             <aside className="sidebar">
                 <div className="sidebar-header">
                     <Monitor size={24} /> <span>BBO.</span>
                 </div>
+
+                {/* Vertical Navigation Links */}
                 <nav className="sidebar-nav">
                     <ul className="flex-col gap-2">
                         {links.map((link) => {
@@ -73,8 +95,11 @@ export default function DashboardLayout() {
                         })}
                     </ul>
                 </nav>
+
+                {/* Sidebar Bottom: User Profile Info & Logout */}
                 <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border)' }}>
                     <div className="flex items-center gap-2 mb-4">
+                        {/* Avatar Bubble */}
                         <div style={{ width: '32px', height: '32px', borderRadius: '16px', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.8rem' }}>
                             {user.name.charAt(0)}
                         </div>
@@ -89,14 +114,16 @@ export default function DashboardLayout() {
                 </div>
             </aside>
 
-            {/* Main Container */}
+            {/* 2. Main Content Container */}
             <div className="main-content">
                 <header className="top-header">
-                    {/* Can put global search or notifications here */}
+                    {/* Top utility bar (view public site link) */}
                     <div className="flex gap-4 items-center">
                         <Link to="/" className="btn btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>View Site</Link>
                     </div>
                 </header>
+                
+                {/* Specific page content (e.g., Dashboard, Reports) is injected here */}
                 <main className="page-content">
                     <Outlet />
                 </main>
@@ -104,3 +131,4 @@ export default function DashboardLayout() {
         </div>
     );
 }
+

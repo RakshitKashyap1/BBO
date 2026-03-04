@@ -1,3 +1,22 @@
+/**
+ * @file mockData.js
+ * @description Provides placeholder data for the application's demonstration.
+ * In a real-world scenario, this data would be fetched from a backend API.
+ */
+
+/**
+ * mockAdSpaces: An array of billboard/advertisement space objects.
+ * Each object contains:
+ * - id: Unique identifier
+ * - title: Descriptive name of the space
+ * - location: Geographic location
+ * - type: Technology type (Digital, Static, Print)
+ * - pricePerDay: Cost to rent for 24 hours
+ * - minDays: Minimum booking duration required
+ * - image: URL to a representative image
+ * - ownerId: ID of the user who owns/manages this space
+ * - status: Current availability status
+ */
 export const mockAdSpaces = [
     {
         id: 'space-1',
@@ -34,12 +53,18 @@ export const mockAdSpaces = [
     }
 ];
 
+/**
+ * mockUsers: Represent the different user types (roles) available in the system.
+ */
 export const mockUsers = [
     { id: 'adv-1', name: 'Acme Corp', role: 'advertiser', email: 'ads@acme.com' },
     { id: 'owner-1', name: 'Global Media Group', role: 'owner', email: 'sales@globalmedia.com' },
     { id: 'admin-1', name: 'System Admin', role: 'admin', email: 'admin@platform.com' }
 ];
 
+/**
+ * mockBookings: Records of past and current rental transactions between advertisers and owners.
+ */
 export const mockBookings = [
     {
         id: 'booking-1',
@@ -60,3 +85,4 @@ export const mockBookings = [
         totalCost: 11200,
     }
 ];
+

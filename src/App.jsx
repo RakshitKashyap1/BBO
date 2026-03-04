@@ -1,13 +1,19 @@
+/**
+ * @file App.jsx
+ * @description The main component of the application. 
+ * It sets up the Routing, Authentication Context, and Layout structures.
+ */
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 
-// Layouts
+// Layouts - Wrapper components that provide consistent UI (Header, Footer, Sidebar)
 import PublicLayout from './layouts/PublicLayout';
 import DashboardLayout from './layouts/DashboardLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 
-// Pages to import
+// Pages to import - Actual page content components
 import Home from './pages/public/Home';
 import Search from './pages/public/Search';
 import AdDetails from './pages/public/AdDetails';
@@ -16,7 +22,11 @@ import Login from './pages/public/Login';
 // Advertiser Pages
 import AdvertiserDashboard from './pages/advertiser/Dashboard';
 
-// Mock Page Builder Utility to avoid 30 files...
+/**
+ * MockPage: A utility component used to render a placeholder page for routes 
+ * that haven't been fully individualised yet.
+ * @param {string} title - The title of the page to display.
+ */
 const MockPage = ({ title }) => (
     <div className="animate-fade-in">
         <h1 className="mb-8">{title}</h1>
@@ -26,22 +36,36 @@ const MockPage = ({ title }) => (
     </div>
 );
 
+/**
+ * App: The root React component.
+ * It manages:
+ * 1. AuthProvider: Provides authentication state to all child components.
+ * 2. BrowserRouter: Enables client-side routing.
+ * 3. Routes: Defines the mapping between URL paths and components.
+ */
 export default function App() {
     return (
         <AuthProvider>
             <BrowserRouter>
                 <Routes>
-                    {/* Public Routes */}
+                    {/* 
+                        Public Routes 
+                        Wrapped in PublicLayout (Global Header/Footer).
+                        Available to everyone.
+                    */}
                     <Route element={<PublicLayout />}>
                         <Route path="/" element={<Home />} />
                         <Route path="/search" element={<Search />} />
                         <Route path="/ad/:id" element={<AdDetails />} />
                         <Route path="/login" element={<Login />} />
-                        {/* Using mock page for register */}
                         <Route path="/register" element={<MockPage title="Register" />} />
                     </Route>
 
-                    {/* Advertiser Secured Routes */}
+                    {/* 
+                        Advertiser Secured Routes 
+                        Requires a logged-in user with the 'advertiser' role.
+                        Wrapped in DashboardLayout (Sidebar/Top Nav).
+                    */}
                     <Route element={<ProtectedRoute allowedRoles={['advertiser']} />}>
                         <Route element={<DashboardLayout />}>
                             <Route path="/advertiser/dashboard" element={<AdvertiserDashboard />} />
@@ -53,7 +77,11 @@ export default function App() {
                         </Route>
                     </Route>
 
-                    {/* Owner Secured Routes */}
+                    {/* 
+                        Owner Secured Routes 
+                        Requires a logged-in user with the 'owner' role.
+                        Wrapped in DashboardLayout.
+                    */}
                     <Route element={<ProtectedRoute allowedRoles={['owner']} />}>
                         <Route element={<DashboardLayout />}>
                             <Route path="/owner/dashboard" element={<MockPage title="Owner Dashboard" />} />
@@ -65,7 +93,11 @@ export default function App() {
                         </Route>
                     </Route>
 
-                    {/* Admin Secured Routes */}
+                    {/* 
+                        Admin Secured Routes 
+                        Requires a logged-in user with the 'admin' role.
+                        Wrapped in DashboardLayout.
+                    */}
                     <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
                         <Route element={<DashboardLayout />}>
                             <Route path="/admin/dashboard" element={<MockPage title="Admin Dashboard" />} />
@@ -77,10 +109,14 @@ export default function App() {
                         </Route>
                     </Route>
 
-                    {/* Fallback 404 */}
+                    {/* 
+                        Fallback 404 Route
+                        Handles any paths that do not match the defined routes above.
+                    */}
                     <Route path="*" element={<div className="container" style={{ paddingTop: '10rem' }}><h1 className="text-center">404 - Not Found</h1></div>} />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
     );
 }
+
