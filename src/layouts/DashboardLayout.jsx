@@ -9,7 +9,7 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
     Monitor, LayoutDashboard, CalendarDays, Megaphone, Upload, PieChart,
-    User, Image as ImageIcon, PlusCircle, DollarSign, Users, ShieldAlert, LogOut
+    User, Image as ImageIcon, PlusCircle, DollarSign, Users, ShieldAlert, LogOut, Menu, X
 } from 'lucide-react';
 
 /**
@@ -52,6 +52,8 @@ export default function DashboardLayout() {
     const location = useLocation();
     const navigate = useNavigate();
 
+    const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
     // If no user is logged in, we return null (though ProtectedRoute should prevent this)
     if (!user) return null;
 
@@ -66,11 +68,17 @@ export default function DashboardLayout() {
         navigate('/');
     };
 
+    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+    const closeSidebar = () => setIsSidebarOpen(false);
+
     return (
-        <div className="dashboard-layout">
+        <div className={`dashboard-layout ${isSidebarOpen ? 'sidebar-open' : ''}`}>
             
+            {/* Sidebar Overlay (Mobile only) */}
+            {isSidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar}></div>}
+
             {/* 1. Sidebar Panel */}
-            <aside className="sidebar">
+            <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
                     <Monitor size={24} /> <span>BBO.</span>
                 </div>
@@ -117,6 +125,11 @@ export default function DashboardLayout() {
             {/* 2. Main Content Container */}
             <div className="main-content">
                 <header className="top-header">
+                    {/* Sidebar Toggle (Mobile only) */}
+                    <button className="sidebar-toggle" onClick={toggleSidebar} aria-label="Toggle Sidebar">
+                        {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
+
                     {/* Top utility bar (view public site link) */}
                     <div className="flex gap-4 items-center">
                         <Link to="/" className="btn btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>View Site</Link>

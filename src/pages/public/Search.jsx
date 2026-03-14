@@ -43,7 +43,7 @@ export default function Search() {
                     <p>Find the perfect location for your next campaign</p>
                 </div>
 
-                <div className="flex gap-2 w-full md:w-auto">
+                <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                     <div style={{ position: 'relative' }} className="w-full md:w-64">
                         <SearchIcon size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                         <input

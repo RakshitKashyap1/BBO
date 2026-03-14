@@ -210,6 +210,12 @@ h1 {
     font-weight: 800;
 }
 
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+}
+
 h1 span {
     display: block;
     background: linear-gradient(to right, #fff, #a0a0a0);
@@ -368,6 +374,13 @@ h1 span {
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+@media (max-width: 768px) {
+    .split-card {
+        padding: 2rem;
+        min-height: auto;
+    }
+}
+
 .split-card::before {
     content: '';
     position: absolute;
@@ -500,6 +513,15 @@ h1 span {
 
     .hero-desc {
         margin: 0 auto;
+    }
+
+    .hero-visual {
+        order: -1;
+    }
+
+    .billboard-mock {
+        width: 260px;
+        height: 150px;
     }
 
     .stats {
@@ -712,6 +734,14 @@ h1 span {
         border-left: none;
         border-top: 1px solid var(--glass-border);
     }
+
+    .search-tagline {
+        font-size: 1.75rem;
+    }
+
+    .date-group {
+        flex-direction: column;
+    }
 }
 
 /* Footer Section */
@@ -726,6 +756,19 @@ footer {
     grid-template-columns: 1.5fr 1fr 1fr 1fr;
     gap: 3rem;
     margin-bottom: 4rem;
+}
+
+@media (max-width: 968px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
 }
 
 .footer-col {
