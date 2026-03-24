@@ -11,9 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Add 'apps' to Python path
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
-SECRET_KEY = 'django-insecure-dummy-key-for-local-development'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-dummy-key-for-local-development')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 

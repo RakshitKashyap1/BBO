@@ -7,6 +7,8 @@ dist-ssr/
 .eslintcache
 .stylelintcache
 *.tsbuildinfo
+.npm
+.cache
 
 # Python
 __pycache__/
@@ -18,6 +20,15 @@ env/
 venv/
 pip-log.txt
 pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.eggs/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
 
 # Environment Variables
 .env
@@ -30,6 +41,8 @@ pip-delete-this-directory.txt
 *.swp
 *.swo
 *.DS_Store
+*.sublime-project
+*.sublime-workspace
 
 # DB
 *.sqlite3
@@ -40,3 +53,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *.log
+backend/check.txt
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
