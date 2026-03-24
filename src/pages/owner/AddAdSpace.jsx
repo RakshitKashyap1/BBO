@@ -12,8 +12,9 @@ export default function AddAdSpace() {
         type: 'Digital',
         width: '',
         height: '',
-        base_price_per_day: '',
-        footfall_estimate: ''
+        basePricePerDay: '',
+        footfallEstimate: '',
+        availabilityStatus: 'available'
     });
 
     const handleChange = (e) => {
@@ -125,12 +126,12 @@ export default function AddAdSpace() {
                                 <DollarSign size={18} className="absolute left-3 top-3 text-muted" style={{ transform: 'none' }} />
                                 <input 
                                     type="number" 
-                                    name="base_price_per_day"
+                                    name="basePricePerDay"
                                     required
                                     className="form-input" 
                                     style={{ paddingLeft: '2.5rem' }} 
                                     placeholder="500.00"
-                                    value={formData.base_price_per_day}
+                                    value={formData.basePricePerDay}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -140,10 +141,10 @@ export default function AddAdSpace() {
                             <label className="form-label">Est. Daily Footfall</label>
                             <input 
                                 type="number" 
-                                name="footfall_estimate"
+                                name="footfallEstimate"
                                 className="form-input" 
                                 placeholder="10000"
-                                value={formData.footfall_estimate}
+                                value={formData.footfallEstimate}
                                 onChange={handleChange}
                             />
                         </div>
