@@ -20,6 +20,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('id', 'name', 'email', 'password', 'role')
 
+    def validate_email(self, value):
+        # Email is already checked implicitly by EmailField, 
+        # but here we can add extra explicit business logic if needed.
+        if CustomUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError("A user with this email already exists.")
+        
+        # Simple domain checks (optional)
+        if "@" not in value or "." not in value.split("@")[-1]:
+            raise serializers.ValidationError("Please provide a valid email format.")
+            
+        return value.lower()
+
     def create(self, validated_data):
         user = CustomUser.objects.create_user(
             username=validated_data['email'],
