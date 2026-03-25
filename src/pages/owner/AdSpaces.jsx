@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-import { Loader2, Plus, MapPin, Edit2, Trash2 } from 'lucide-react';
+import { Plus, MapPin, Edit2, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import Spinner from '../../components/common/Spinner';
 
 export default function ManageAdSpaces() {
     const [spaces, setSpaces] = useState([]);
@@ -26,9 +28,10 @@ export default function ManageAdSpaces() {
         if (!window.confirm("Are you sure you want to delete this ad space?")) return;
         try {
             await api.delete(`/adspaces/${id}/`);
+            toast.success("Ad space deleted successfully");
             fetchSpaces();
         } catch (error) {
-            alert("Failed to delete ad space");
+            toast.error("Failed to delete ad space. It might have active bookings.");
         }
     };
 
@@ -47,7 +50,7 @@ export default function ManageAdSpaces() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {isLoading ? (
                     <div className="col-span-full flex justify-center py-20">
-                        <Loader2 className="animate-spin text-primary" size={40} />
+                        <Spinner size="lg" />
                     </div>
                 ) : (
                     spaces.map(space => (

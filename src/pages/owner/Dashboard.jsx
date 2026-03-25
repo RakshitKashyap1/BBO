@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
-import { TrendingUp, Layout, Clock, CheckCircle } from 'lucide-react';
+import { TrendingUp, Layout, Clock, CheckCircle, BarChart3, PieChart as PieChartIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Spinner from '../../components/common/Spinner';
+import { 
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
+    PieChart, Pie, Cell, LineChart, Line, AreaChart, Area
+} from 'recharts';
 
 export default function OwnerDashboard() {
     const { user } = useAuth();
@@ -15,6 +19,7 @@ export default function OwnerDashboard() {
         totalEarnings: 0
     });
     const [recentBookings, setRecentBookings] = useState([]);
+    const [chartData, setChartData] = useState({ revenue: [], cities: [] });
     const [isLoading, setIsLoading] = useState(true);
     const [isProcessing, setIsProcessing] = useState(null);
 
@@ -41,6 +46,26 @@ export default function OwnerDashboard() {
                 totalEarnings: earnings
             });
             setRecentBookings(myBookings.slice(0, 5));
+
+            // Prepare Chart Data
+            const cityCounts = myBookings.reduce((acc, b) => {
+                const city = b.adspace_details?.city || 'Unknown';
+                acc[city] = (acc[city] || 0) + 1;
+                return acc;
+            }, {});
+            
+            const revenueTrend = myBookings
+                .filter(b => b.status === 'active' || b.status === 'completed')
+                .map(b => ({
+                    date: b.startDate,
+                    amount: parseFloat(b.totalPrice)
+                }))
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            setChartData({
+                revenue: revenueTrend,
+                cities: Object.entries(cityCounts).map(([name, value]) => ({ name, value }))
+            });
         } catch (error) {
             console.error("Error fetching owner dashboard data:", error);
             toast.error("Failed to load dashboard statistics.");
@@ -110,6 +135,62 @@ export default function OwnerDashboard() {
                         <div className="stat-label">Total Revenue</div>
                         <div className="stat-value">${stats.totalEarnings.toLocaleString()}</div>
                     </div>
+                </div>
+            </div>
+
+            {/* Charts Section */}
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+                <div className="card" style={{ height: '350px' }}>
+                    <div className="flex items-center gap-2 mb-6">
+                        <BarChart3 size={20} className="text-primary" />
+                        <h3 className="m-0">Revenue Trend</h3>
+                    </div>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={chartData.revenue}>
+                            <defs>
+                                <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.8}/>
+                                    <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.1)" />
+                            <XAxis dataKey="date" hide />
+                            <YAxis stroke="var(--text-muted)" fontSize={12} tickFormatter={(val) => `$${val}`} />
+                            <Tooltip 
+                                contentStyle={{ 
+                                    background: 'var(--bg-panel)', 
+                                    border: '3px solid var(--border)',
+                                    borderRadius: 'var(--radius-sm)',
+                                    boxShadow: 'var(--shadow-sm)'
+                                }} 
+                                formatter={(val) => [`$${val}`, 'Revenue']}
+                            />
+                            <Area type="monotone" dataKey="amount" stroke="var(--primary)" fillOpacity={1} fill="url(#colorAmount)" strokeWidth={3} />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </div>
+
+                <div className="card" style={{ height: '350px' }}>
+                    <div className="flex items-center gap-2 mb-6">
+                        <PieChartIcon size={20} className="text-secondary" />
+                        <h3 className="m-0">Bookings by City</h3>
+                    </div>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData.cities} layout="vertical">
+                            <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(0,0,0,0.1)" />
+                            <XAxis type="number" hide />
+                            <YAxis dataKey="name" type="category" stroke="var(--text-muted)" fontSize={12} width={80} />
+                            <Tooltip 
+                                cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+                                contentStyle={{ 
+                                    background: 'var(--bg-panel)', 
+                                    border: '3px solid var(--border)',
+                                    borderRadius: 'var(--radius-sm)'
+                                }} 
+                            />
+                            <Bar dataKey="value" fill="var(--secondary)" radius={[0, 4, 4, 0]} barSize={20} />
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
 
