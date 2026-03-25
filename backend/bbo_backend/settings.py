@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'bookings',
     'payments',
     'reports',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -117,6 +118,11 @@ REST_FRAMEWORK = {
         'user': '1000/day'
     },
     'EXCEPTION_HANDLER': 'core.utils.custom_exception_handler.custom_exception_handler',
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ),
 }
 
 CORS_ALLOW_ALL_ORIGINS = True

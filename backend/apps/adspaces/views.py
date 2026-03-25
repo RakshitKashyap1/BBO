@@ -7,6 +7,10 @@ from core.permissions import IsAdSpaceOwnerOrReadOnly
 class AdSpaceViewSet(viewsets.ModelViewSet):
     serializer_class = AdSpaceSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAdSpaceOwnerOrReadOnly]
+    filterset_fields = ['city', 'type', 'availability_status']
+    search_fields = ['location', 'city', 'type']
+    ordering_fields = ['base_price_per_day', 'footfall_estimate']
+
 
     def get_queryset(self):
         queryset = AdSpace.objects.all()
