@@ -48,9 +48,17 @@ export function AuthProvider({ children }) {
         localStorage.removeItem('user');
     };
 
+    if (loading) {
+        return (
+            <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-main)' }}>
+                <div className="loader"></div>
+            </div>
+        );
+    }
+
     return (
         <AuthContext.Provider value={{ user, login, logout, loading }}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 }

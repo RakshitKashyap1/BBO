@@ -71,8 +71,14 @@ export default function Search() {
                     {filteredSpaces.map(space => (
                         <Link to={`/ad/${space.id}`} key={space.id} className="card p-0 overflow-hidden" style={{ padding: 0, textDecoration: 'none', display: 'flex', flexDirection: 'column' }}>
                             <img 
-                                src={`https://images.unsplash.com/photo-1542289139-441639c0d4dd?auto=format&fit=crop&q=80&w=800`} 
+                                src={`https://images.unsplash.com/photo-${[
+                                    '1542312167-7315c9441724', // London
+                                    '1502602898657-3e917247a183', // Paris
+                                    '1517245315167-6c38da70bca1', // Digital
+                                    '1611162617474-5b21e879e113', // Modern
+                                ][space.id % 4] || '1542312167-7315c9441724'}?auto=format&fit=crop&q=80&w=800`} 
                                 alt={space.location} 
+                                onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1542312167-7315c9441724?auto=format&fit=crop&q=80&w=800' }}
                                 style={{ width: '100%', height: '200px', objectFit: 'cover', borderBottom: '1px solid var(--border)' }} 
                             />
                             

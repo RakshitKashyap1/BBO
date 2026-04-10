@@ -48,8 +48,14 @@ api.interceptors.response.use(
       localStorage.removeItem("refresh_token");
       localStorage.removeItem("user");
       
-      // Force redirect to login page if they aren't already there
-      if (!window.location.pathname.includes('/login')) {
+      // Determine if we should redirect to login
+      const publicPaths = ['/', '/search', '/ad', '/login', '/register'];
+      const isPublicPath = publicPaths.some(path => 
+        window.location.pathname === path || (path !== '/' && window.location.pathname.startsWith(path))
+      );
+
+      // Force redirect to login page if they are on a protected route
+      if (!isPublicPath) {
         window.location.href = "/login";
       }
     }
