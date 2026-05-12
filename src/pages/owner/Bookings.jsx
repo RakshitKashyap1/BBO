@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { CheckCircle, XCircle, Calendar as CalendarIcon, List } from 'lucide-react';
 import toast from 'react-hot-toast';
-import Spinner from '../../components/common/Spinner';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import DataTable from '../../components/common/DataTable';
+import { TableSkeleton } from '../../components/common/Skeleton';
 
 export default function ReceivedBookings() {
     const [bookings, setBookings] = useState([]);
@@ -23,9 +24,56 @@ export default function ReceivedBookings() {
         } catch (error) {
             console.error("Error fetching received bookings:", error);
         } finally {
-            setIsLoading(false);
+            // Simulate a slightly longer load for skeleton visibility
+            setTimeout(() => setIsLoading(false), 500);
         }
     };
+
+    const columns = [
+        { key: 'id', label: 'ID', render: (row) => `#${row.id}` },
+        { key: 'advertiser', label: 'Advertiser', render: (row) => `User ${row.advertiser}` },
+        { key: 'location', label: 'Space', render: (row) => row.adspace_details?.location || 'N/A' },
+        { key: 'startDate', label: 'Dates', render: (row) => (
+            <>
+                {row.startDate} <br/>
+                <small className="text-muted">to {row.endDate}</small>
+            </>
+        )},
+        { key: 'totalPrice', label: 'Total Price', render: (row) => (
+            <span style={{ fontWeight: 600 }}>${parseFloat(row.totalPrice).toLocaleString()}</span>
+        )},
+        { key: 'status', label: 'Status', render: (row) => (
+            <span className={`badge ${
+                row.status === 'active' ? 'badge-success' : 
+                row.status === 'pending' ? 'badge-warning' : 
+                row.status === 'completed' ? 'badge-info' : 'badge-danger'
+            }`}>
+                <span style={{ marginRight: '6px' }}>
+                    {row.status === 'active' ? '🟢' : row.status === 'pending' ? '🟡' : row.status === 'completed' ? '🔵' : '🔴'}
+                </span>
+                {row.status}
+            </span>
+        )},
+        { key: 'actions', label: 'Actions', sortable: false, render: (row) => (
+            <div className="flex gap-2">
+                {row.status === 'pending' && (
+                    <>
+                        <button onClick={() => handleAction(row.id, 'approve')} className="btn btn-primary btn-sm btn-ripple" style={{ padding: '4px 8px', fontSize: '10px' }}>
+                            <CheckCircle size={14} className="mr-1" /> Approve
+                        </button>
+                        <button className="btn btn-secondary btn-sm btn-ripple" style={{ padding: '4px 8px', fontSize: '10px' }}>
+                            <XCircle size={14} className="mr-1" /> Reject
+                        </button>
+                    </>
+                )}
+                {row.status === 'active' && (
+                    <button onClick={() => handleAction(row.id, 'complete')} className="btn btn-secondary btn-sm btn-ripple" style={{ padding: '4px 8px', fontSize: '10px' }}>
+                        Mark Completed
+                    </button>
+                )}
+            </div>
+        )}
+    ];
 
     const handleAction = async (id, action) => {
         try {
@@ -86,75 +134,15 @@ export default function ReceivedBookings() {
                 </div>
             </div>
 
-            <div className="card p-0">
+            <div className="card p-6">
                 {isLoading ? (
-                    <div className="flex justify-center py-20">
-                        <Spinner size="lg" />
-                    </div>
+                    <TableSkeleton rows={5} />
                 ) : viewMode === 'list' ? (
-                    <div className="table-container" style={{ margin: 0 }}>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Advertiser</th>
-                                    <th>Space</th>
-                                    <th>Dates</th>
-                                    <th>Total Price</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {bookings.map(booking => (
-                                    <tr key={booking.id}>
-                                        <td>#{booking.id}</td>
-                                        <td>User {booking.advertiser}</td>
-                                        <td>{booking.adspace_details?.location}</td>
-                                        <td>
-                                            {booking.startDate} <br/>
-                                            <small className="text-muted">to {booking.endDate}</small>
-                                        </td>
-                                        <td style={{ fontWeight: 600 }}>${parseFloat(booking.totalPrice).toLocaleString()}</td>
-                                        <td>
-                                            <span className={`badge ${
-                                                booking.status === 'active' ? 'badge-success' : 
-                                                booking.status === 'pending' ? 'badge-warning' : 
-                                                booking.status === 'completed' ? 'badge-info' : 'badge-danger'
-                                            }`}>
-                                                <span style={{ marginRight: '6px' }}>{booking.status === 'active' ? '🟢' : booking.status === 'pending' ? '🟡' : booking.status === 'completed' ? '🔵' : '🔴'}</span>
-                                                {booking.status}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="flex gap-2">
-                                                {booking.status === 'pending' && (
-                                                    <>
-                                                        <button onClick={() => handleAction(booking.id, 'approve')} className="btn btn-primary btn-sm" style={{ padding: '4px 8px', fontSize: '10px' }}>
-                                                            <CheckCircle size={14} className="mr-1" /> Approve
-                                                        </button>
-                                                        <button className="btn btn-secondary btn-sm" style={{ padding: '4px 8px', fontSize: '10px' }}>
-                                                            <XCircle size={14} className="mr-1" /> Reject
-                                                        </button>
-                                                    </>
-                                                )}
-                                                {booking.status === 'active' && (
-                                                    <button onClick={() => handleAction(booking.id, 'complete')} className="btn btn-secondary btn-sm" style={{ padding: '4px 8px', fontSize: '10px' }}>
-                                                        Mark Completed
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {bookings.length === 0 && (
-                                    <tr>
-                                        <td colSpan="7" className="text-center py-20 text-muted">No booking requests received yet.</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                    <DataTable 
+                        columns={columns} 
+                        data={bookings} 
+                        searchPlaceholder="Search by ID, status or location..." 
+                    />
                 ) : (
                     <div className="p-8">
                         <div className="flex gap-8 items-start">
