@@ -8,12 +8,35 @@ Welcome, billboard aficionado! We're thrilled that you want to help us make BBO.
 
 1.  **Fork it**: Create your own copy of the repo.
 2.  **Branch it**: Create a descriptive branch (e.g., `feature/add-payment-gateway` or `fix/button-shadow`).
-3.  **Setup local env**: Use our automagic setup scripts:
-    -   Run `./setup.ps1` (Windows) or `./setup.sh` (Unix).
+3.  **Setup local env**: Choose your preferred method:
+    -   **Docker (recommended)**: Run `docker compose up -d`
+    -   **Manual**: Run `./setup.ps1` (Windows) or `./setup.sh` (Unix)
 4.  **Code it**: Follow the Neo-Brutalist design philosophy (see below).
 5.  **Test it**: Ensure both frontend and backend are running smoothly.
 6.  **Commit it**: Write clear, concise commit messages.
 7.  **PR it**: Submit a Pull Request and describe what you've changed!
+
+---
+
+## 🐳 Docker Development
+
+Running the full stack with Docker:
+
+```bash
+# Start all services
+docker compose up -d
+
+# Rebuild after dependency changes
+docker compose up --build -d
+
+# Run tests inside container
+docker compose exec backend python manage.py test
+
+# Access backend shell
+docker compose exec backend python manage.py shell
+```
+
+> **Note**: PostgreSQL data persists in a Docker volume between restarts. Use `docker compose down -v` to reset the database.
 
 ---
 
@@ -42,6 +65,17 @@ If you're adding new UI components, keep these rules in mind:
 -   **Functional Components**: Use Hooks (useState, useEffect, etc.).
 -   **Reusable Components**: If a button looks the same twice, make it a component.
 -   **Environment Variables**: Never hardcode API URLs! Use `import.meta.env.VITE_API_URL`.
+
+---
+
+## 🔄 CI/CD Checks
+
+Every Pull Request automatically runs:
+- **Frontend**: Build verification
+- **Backend**: Linting (flake8), migration checks, and test suite
+- **Docker**: Image build verification
+
+Ensure your PR passes all CI checks before requesting review.
 
 ---
 

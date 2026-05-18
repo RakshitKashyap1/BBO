@@ -55,6 +55,9 @@ We leverage modern technologies to ensure speed, security, and the ability to ha
 - **API**: Centralized v1 Versioning 🗺️ (The future-proofing)
 - **Design**: Custom Neo-Brutalist CSS System 🎨 (The attitude)
 - **Database**: PostgreSQL (Where the giant sign data sleeps)
+- **Containerization**: Docker & Docker Compose 🐳
+- **Web Server**: Nginx (Frontend) + Gunicorn (Backend)
+- **CI/CD**: GitHub Actions 🔄
 
 ---
 
@@ -174,6 +177,67 @@ python manage.py runserver
 
 ---
 
+## 🐳 Docker Quick Start
+
+Get the entire stack running in seconds with Docker.
+
+### Prerequisites
+- [Docker](https://www.docker.com/products/docker-desktop/) installed and running
+
+### Start All Services
+```bash
+docker compose up -d
+```
+
+### Access the App
+- **Frontend**: http://localhost
+- **Backend API**: http://localhost:8000/api/v1/
+
+### Useful Commands
+```bash
+# View logs
+docker compose logs -f
+
+# View specific service logs
+docker compose logs -f backend
+
+# Stop all services
+docker compose down
+
+# Rebuild after code changes
+docker compose up --build -d
+
+# Run migrations manually
+docker compose exec backend python manage.py migrate
+
+# Seed the database
+docker compose exec backend python seed_db.py
+```
+
+---
+
+## 🔄 CI/CD Pipeline
+
+This project uses GitHub Actions for automated testing and building.
+
+### Frontend Pipeline (`.github/workflows/frontend-ci.yml`)
+- **Triggers**: Push or PR to `main` on frontend file changes
+- **Jobs**: Node.js setup → Install → Build → Docker image build
+- **Caching**: npm dependencies and Docker layers via GitHub Actions cache
+
+### Backend Pipeline (`.github/workflows/backend-ci.yml`)
+- **Triggers**: Push or PR to `main` on backend file changes
+- **Jobs**: Python setup → Install → Flake8 lint → PostgreSQL test → Migrations → Docker image build
+- **Services**: Spins up PostgreSQL 16 for integration testing
+
+### Adding New Environment Variables
+If you add new variables, update:
+1. The relevant `.env.example` file
+2. `docker-compose.yml` environment section
+3. CI workflow secrets if needed (GitHub → Settings → Secrets → Actions)
+
+---
+
 ## 📁 Project Structure
 
 Navigating a new codebase can be like finding a specific billboard in a storm. Here's your map:
@@ -184,6 +248,8 @@ Navigating a new codebase can be like finding a specific billboard in a storm. H
 │   ├── api/            # Versioned API logic (v1)
 │   ├── apps/           # Core Django apps (users, ads, bookings)
 │   ├── bbo_backend/    # Main Django settings/config
+│   ├── Dockerfile      # Backend Docker image
+│   ├── .dockerignore   # Backend Docker exclusions
 │   └── requirements.txt # Python dependencies
 ├── src/                # React Frontend
 │   ├── components/     # UI components (Neo-Brutalist inspired)
@@ -191,6 +257,13 @@ Navigating a new codebase can be like finding a specific billboard in a storm. H
 │   ├── services/       # API clients and business logic
 │   └── styles/         # Custom Neo-Brutalist CSS
 ├── public/             # Static assets (images, fonts)
+├── .github/workflows/
+│   ├── frontend-ci.yml # Frontend CI/CD pipeline
+│   └── backend-ci.yml  # Backend CI/CD pipeline
+├── Dockerfile.frontend # Frontend Docker image (Node → Nginx)
+├── docker-compose.yml  # Multi-service orchestration
+├── nginx.conf          # Nginx reverse proxy config
+├── .dockerignore       # Root Docker build exclusions
 ├── setup.ps1           # Windows automation script
 ├── setup.sh            # Unix automation script
 ├── .env.example        # Environment variable templates
