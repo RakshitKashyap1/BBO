@@ -61,3 +61,5 @@ Desktop.ini
 .DS_Store
 
 /src/generated/prisma
+
+.github/workflows/jekyll-docker.yml
